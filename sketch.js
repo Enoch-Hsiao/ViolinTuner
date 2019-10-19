@@ -273,7 +273,11 @@ function setup() {
   recorder.setInput(mic);
   soundFile = new p5.SoundFile();
 }
-
+function touchStarted() {
+  if (getAudioContext().state !== 'running') {
+    getAudioContext().resume();
+  }
+}
 function listening() {
   pitch = ml5.pitchDetection('./model/', audioContext, mic.stream, modelLoaded);
 }
