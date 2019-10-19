@@ -272,6 +272,11 @@ function setup() {
   recorder = new p5.SoundRecorder();
   recorder.setInput(mic);
   soundFile = new p5.SoundFile();
+       var myDiv = createDiv('click to start audio');
+   myDiv.position(0, 0);
+    userStartAudio().then(function() {
+      myDiv.remove();
+    });
 }
 
 function listening() {
