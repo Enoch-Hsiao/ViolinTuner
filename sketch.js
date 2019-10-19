@@ -274,8 +274,7 @@ function setup() {
   soundFile = new p5.SoundFile();
 }
 function touchStarted() {
-  if (getAudioContext().state !== 'running') {
-    getAudioContext().resume();
+     getAudioContext().resume();
   }
 }
 function listening() {
