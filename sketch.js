@@ -1,4 +1,4 @@
-let model_url = 'https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/';
+
 let pitch;
 let audioContext;
 let mic;
@@ -275,7 +275,7 @@ function setup() {
 }
 
 function listening() {
-  pitch = ml5.pitchDetection(model_url, audioContext, mic.stream, modelLoaded);
+  pitch = ml5.pitchDetection('./model/', audioContext, mic.stream, modelLoaded);
 }
 
 function gotPitch(error, frequency) {
