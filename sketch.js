@@ -277,6 +277,7 @@ function touchStarted() {
      getAudioContext().resume();
   }
 }
+function mousePressed() { getAudioContext().resume() }
 function listening() {
   pitch = ml5.pitchDetection('./model/', audioContext, mic.stream, modelLoaded);
 }
