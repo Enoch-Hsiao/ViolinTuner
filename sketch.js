@@ -1,4 +1,3 @@
-
 let pitch;
 let audioContext;
 let mic;
@@ -273,9 +272,7 @@ function setup() {
   recorder.setInput(mic);
   soundFile = new p5.SoundFile();
 }
-function touchStarted() {
-     getAudioContext().resume();
-  }
+
 function listening() {
   pitch = ml5.pitchDetection('./model/', audioContext, mic.stream, modelLoaded);
 }
@@ -474,7 +471,6 @@ function draw() {
           }
           ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
           image(img8va, 200, 525 - (Math.floor(count / 2) * 25), 150, 50);
-
         }
       }
     }
