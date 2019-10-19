@@ -278,6 +278,10 @@ function listening() {
   pitch = ml5.pitchDetection(model_url, audioContext, mic.stream, modelLoaded);
 }
 
+function touchStarted() {
+  getAudioContext().resume()
+}
+
 function gotPitch(error, frequency) {
   if (error) {
     console.error(error);
