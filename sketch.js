@@ -290,6 +290,7 @@ function gotPitch(error, frequency) {
 }
 
 function modelLoaded() {
+     select('#status').html('Model Loaded');
   pitch.getPitch(gotPitch);
 }
 
