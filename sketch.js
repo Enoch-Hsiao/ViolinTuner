@@ -468,7 +468,7 @@ function draw() {
   }
   fill(0);
   textSize(40);
-  text(freq.toFixed(2) + " Hz", width / 2, height * 0.85);
+  text(freq.toFixed(0) + " Hz", width / 2, height * 0.85);
   fill(0);
   rect(0, 275, 400, 5); 
   rect(0, 325, 400, 5);
