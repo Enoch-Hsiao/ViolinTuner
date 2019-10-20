@@ -98,10 +98,12 @@ body {
 
 #startButton {
   background-color: white;
-  padding: 20px 40px;
+  padding: 7.5px 30px;
   font-size: 25px;
   cursor: pointer;
   display: inline-block;
+  border-color: black;
+  border-width: thin;
 }
 
 .btn:hover {
