@@ -328,6 +328,7 @@ function closeAllSelect(elmnt) {
 document.addEventListener("click", closeAllSelect);
 
 function setup() {
+  console.log(pixelDensity() * displayWidth);
   createCanvas(400, 950);
   audioContext = getAudioContext();
   mic = new p5.AudioIn();
@@ -382,14 +383,14 @@ function change() {
   } else {
     elem.value = "Start Activity";
     recorder.stop();
-    if(document.getElementById("download").checked) {
+    if (document.getElementById("download").checked) {
       saveSound(soundFile, 'recording.wav');
     }
     activityStarted = 0;
     count = 0;
-    if(document.getElementById("playback").checked) {
-    soundFile.play();
-  }
+    if (document.getElementById("playback").checked) {
+      soundFile.play();
+    }
   }
 }
 
@@ -468,9 +469,9 @@ function draw() {
   }
   fill(0);
   textSize(40);
-  text(freq.toFixed(0) + " Hz", width / 2, height * 0.85);
+  text(freq.toFixed(0) + " Hz", width / 2, height * 0.85); //frequency value
   fill(0);
-  rect(0, 275, 400, 5); 
+  rect(0, 275, 400, 5);
   rect(0, 325, 400, 5);
   rect(0, 375, 400, 5);
   rect(0, 425, 400, 5);
@@ -479,8 +480,8 @@ function draw() {
   image(imgClef, -40, height / 6, imgClef.width / 1.63, imgClef.height / 1.63);
 
   if (activityStarted == 1) { //started test
-    if(document.getElementById("playback").checked){
-    recorder.record(soundFile); //start recording
+    if (document.getElementById("playback").checked) {
+      recorder.record(soundFile); //start recording
     }
     let e = document.getElementById("scales");
     let value = Number(e.options[e.selectedIndex].value);
