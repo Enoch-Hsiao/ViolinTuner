@@ -17,4 +17,4 @@ The ml5.js library is used for pitch detection (https://ml5js.org/reference/api-
 
 ## Screenshot
 
-img src="https://i.ibb.co/JH25DWF/WebApp.png" width="50%">
+<img src="https://i.ibb.co/JH25DWF/WebApp.png" width="50%">
