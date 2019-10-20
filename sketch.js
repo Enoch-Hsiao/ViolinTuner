@@ -9,11 +9,13 @@ let success = 0;
 let img8va;
 let startStop;
 let imgFKey;
+let imgEKey;
 let activityStarted = 0;
 let goingUp = true;
 let count = 0;
 let cMajorScale = [261.63, 292.66, 329.63, 349.32, 392.00, 440.00, 493.88, 523.25, 493.88, 440.00, 392.00, 349.23, 329.63, 293.66, 261.63]
 let fMajorScale = [349.23, 392.00, 440.00, 466.16, 523.25, 587.33, 659.26, 698.46, 659.26, 587.33, 523.25, 466.16, 440.00, 392.00, 349.23]
+let eMajorScale = [329.63, 369.99, 415.30, 440.00, 493.88, 554.37, 622.25, 659.26, 622.25, 554.37, 493.88, 440.00, 415.30, 369.99, 329.63]
 let violinPitches = [note = {
     noteName: "G",
     octave: 3,
@@ -339,6 +341,7 @@ function setup() {
   imgSharp = loadImage('Sharp.png');
   img8va = loadImage('8va.PNG');
   imgFKey = loadImage('fmajkey.png');
+  imgEKey = loadImage('emajkey.png');
   recorder = new p5.SoundRecorder();
   recorder.setInput(mic);
   soundFile = new p5.SoundFile();
@@ -574,6 +577,41 @@ function draw() {
         goingUp = false;
       }
       if (count == fMajorScale.length) {
+        stop();
+        change();
+        goingUp = true;
+        count = 0;
+        success = 0;
+      }
+    } else if (value == "9") {
+      imgEKey.resize(200, 200);
+      image(imgEKey, 0.5, imgEKey.width / 5, imgEKey.length / 5);
+      let diff = Math.abs(1200 * Math.log(eMajorScale[count] / freq) / Math.log(2));
+      if (diff < 10) {
+        success = 1;
+        count++;
+      }
+      if (count != 15) {
+        if (success > 0 && success < 20) { //checkmark fade out animation
+          tint(255, 255 - (15 * success));
+          image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
+          success++;
+          if (success == 20) {
+            success = 0;
+          }
+        }
+      }
+      if (goingUp) {
+        ellipse(285, 475 - (count * 25), 75, 50);
+      } else if (count == 14) {
+        ellipse(285, 475, 75, 50);
+      } else {
+        ellipse(285, 300 + ((count % 7) * 25), 75, 50);
+      }
+      if (count != 0 && count % 7 == 0) {
+        goingUp = false;
+      }
+      if (count == eMajorScale.length) {
         stop();
         change();
         goingUp = true;
