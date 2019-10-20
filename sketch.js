@@ -279,7 +279,7 @@ for (i = 0; i < x.length; i++) {
     c = document.createElement("DIV");
     c.innerHTML = selElmnt.options[j].innerHTML;
     c.addEventListener("click", function(e) {
-      var y, i, k, s, h;
+      let y, i, k, s, h;
       s = this.parentNode.parentNode.getElementsByTagName("select")[0];
       h = this.parentNode.previousSibling;
       for (i = 0; i < s.length; i++) {
@@ -308,7 +308,7 @@ for (i = 0; i < x.length; i++) {
 }
 
 function closeAllSelect(elmnt) {
-  var x, y, i, arrNo = [];
+  let x, y, i, arrNo = [];
   x = document.getElementsByClassName("select-items");
   y = document.getElementsByClassName("select-selected");
   for (i = 0; i < y.length; i++) {
@@ -375,17 +375,21 @@ function startStopChanger() {
 }
 
 function change() {
-  var elem = document.getElementById("startButton");
+  let elem = document.getElementById("startButton");
   if (elem.value == "Start Activity") {
     count = 0;
     elem.value = "End Activity";
   } else {
     elem.value = "Start Activity";
     recorder.stop();
-    saveSound(soundFile, 'recording.wav');
+    if(document.getElementById("download").checked) {
+      saveSound(soundFile, 'recording.wav');
+    }
     activityStarted = 0;
     count = 0;
+    if(document.getElementById("playback").checked) {
     soundFile.play();
+  }
   }
 }
 
@@ -409,7 +413,7 @@ function draw() {
     fill(255, 153, 153);
   }
   arc(200, 850, 394, 400, PI, 0, OPEN);
-  line(3, 850, 397, 850);
+  line(3, 850, 397, 850); //tick marks
   line(20, 770, 50, 782.75);
   line(90, 685, 110, 714);
   line(290, 714, 310, 685);
@@ -466,16 +470,18 @@ function draw() {
   textSize(40);
   text(freq.toFixed(2) + " Hz", width / 2, height * 0.85);
   fill(0);
-  rect(170, 275, 400, 5);
-  rect(170, 325, 400, 5);
-  rect(170, 375, 400, 5);
-  rect(170, 425, 400, 5);
-  rect(170, 475, 400, 5);
+  rect(0, 275, 400, 5); 
+  rect(0, 325, 400, 5);
+  rect(0, 375, 400, 5);
+  rect(0, 425, 400, 5);
+  rect(0, 475, 400, 5);
   noTint();
-  image(imgClef, -20, height / 5, imgClef.width / 2, imgClef.height / 2);
+  image(imgClef, -40, height / 6, imgClef.width / 1.63, imgClef.height / 1.63);
 
   if (activityStarted == 1) { //started test
+    if(document.getElementById("playback").checked){
     recorder.record(soundFile); //start recording
+    }
     let e = document.getElementById("scales");
     let value = Number(e.options[e.selectedIndex].value);
     if (value == 5) {
@@ -540,7 +546,7 @@ function draw() {
             rect(312.5, 325, 10, 200);
           }
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, 175, 560 - (Math.floor(count / 2) * 25), 75, 75);
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 100);
             ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
           } else {
             ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
@@ -559,7 +565,7 @@ function draw() {
             rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
           }
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, 175, 560 - (Math.floor(count / 2) * 25), 75, 75);
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
             ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
           } else {
             ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
@@ -582,7 +588,7 @@ function draw() {
           }
           rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, 175, 560 - (Math.floor(count / 2) * 25), 75, 75);
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
             ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
           } else {
             ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
@@ -601,7 +607,7 @@ function draw() {
             rect(225, 225, 125, 5); //first upper ledger line 
           }
           if (violinPitches[(i - 12)].sharp == true) {
-            image(imgSharp, 175, 560 - (Math.floor(count / 2) * 25), 75, 75);
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
           }
           ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
           image(img8va, 200, 525 - (Math.floor(count / 2) * 25), 150, 50);
