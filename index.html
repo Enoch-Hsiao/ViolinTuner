@@ -13,24 +13,29 @@
 
 <body onload="draw();">
   <h1> Violin Tuner</h1>
-  <div class="custom-select" style="width:200px;">
-    <select id="scales">
-      <option value="5">Select Scale: </option>
-      <option value="5">C Major</option>
-    </select>
+  <div class="left-container">
+    <div>
+      <div class="custom-select" style="width:200px;">
+        <select id="scales">
+          <option value="5">Select Scale: </option>
+          <option value="5">C Major</option>
+        </select>
+      </div>
+      <div id="startActivity">
+        <input type="button" value="Start Activity" onclick="javaScript:startStopChanger()" id="startButton">
+      </div>
+      <li>
+        <label class="container" for="playback" style="word-wrap:break-word">
+          <input id="playback" type="checkbox" value="1" />Live Playback
+        </label>
+        <label class="container" for="download" style="word-wrap:break-word">
+          <input id="download" type="checkbox" value="1" />Recording Download
+        </label>
+      </li>
+    </div>
+    <div class="right-container">
+      <script src="sketch.js"></script>
+    </div>
   </div>
-  <div id="startActivity">
-    <input type="button" value="Start Activity" onclick="javaScript:startStopChanger()" id="startButton">
-  </div>
-  <li>
-     <label class= "container" for="playback"  style="word-wrap:break-word">
-        <input id="playback"  type="checkbox" value= "1" />Live Playback
-     </label>
-    <label class= "container" for="download"  style="word-wrap:break-word">
-        <input id="download"  type="checkbox" value="1" />Recording Download
-     </label>
-</li>
-  <script src="sketch.js"></script>
 </body>
-
 </html>
