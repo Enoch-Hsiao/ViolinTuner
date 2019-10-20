@@ -5,8 +5,16 @@ body {
   background: white;
 }
 
+#logo {
+  display: block;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
 .left-container {
-  margin-top: 300px;
   width: 50%;
   margin-right: 2%;
   float: left;
@@ -134,7 +142,7 @@ canvas {
   margin: auto;
 }
 
-@media only screen and (max-width: 892px) {
+@media only screen and (max-width: 893px) {
   .left-container {
     margin-top: 0%;
     width: 100%;
@@ -145,6 +153,15 @@ canvas {
   .right-container {
     width: 50%;
     float: none;
+  }
+
+  #logo {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
   }
 
   #startActivity {
