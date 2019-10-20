@@ -8,6 +8,7 @@ let imgCheckMark;
 let success = 0;
 let img8va;
 let startStop;
+let imgFKey;
 let activityStarted = 0;
 let goingUp = true;
 let count = 0;
@@ -337,6 +338,7 @@ function setup() {
   imgCheckMark = loadImage('Checkmark.png');
   imgSharp = loadImage('Sharp.png');
   img8va = loadImage('8va.PNG');
+  imgFKey = loadImage('fmajkey.png');
   recorder = new p5.SoundRecorder();
   recorder.setInput(mic);
   soundFile = new p5.SoundFile();
@@ -383,7 +385,9 @@ function change() {
   } else {
     elem.value = "Start Activity";
     activityStarted = 0;
-    recorder.stop();
+    if (document.getElementById("playback").checked) {
+      recorder.stop();
+    }
     if (document.getElementById("download").checked) {
       saveSound(soundFile, 'recording.wav');
     }
@@ -542,6 +546,8 @@ function draw() {
         success = 0;
       }
     } else if (value == "10") { //f major scale
+      imgFKey.resize(200, 200);
+      image(imgFKey, 0.5, imgFKey.width / 5, imgFKey.length / 5);
       let diff = Math.abs(1200 * Math.log(fMajorScale[count] / freq) / Math.log(2));
       if (diff < 10) {
         success = 1;
@@ -572,7 +578,7 @@ function draw() {
         change();
         goingUp = true;
         count = 0;
-        success=0;
+        success = 0;
       }
     }
   } else { //general tuning
