@@ -439,29 +439,29 @@ function draw() {
   }
   let difference = Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)); //cents
   if (violinPitches[i].frequency - freq > 0) { //left side of speedometer
-    if (difference > 30) {
+    if (difference > 40) {
       line(25, 815, 200, 850);
-    } else if (difference > 25) {
+    } else if (difference > 30) {
       line(20, 770, 200, 850);
     } else if (difference > 20) {
       line(55, 735, 200, 850);
-    } else if (difference > 15) {
+    } else if (difference > 10) {
       line(90, 685, 200, 850);
-    } else if (difference > 7.5) {
+    } else if (difference > 5) {
       line(140, 685, 200, 850);
     } else {
       line(200, 685, 200, 850);
     }
   } else { //right side of speedometer
-    if (difference > 30) {
+    if (difference > 40) {
       line(200, 850, 375, 815);
-    } else if (difference > 25) {
+    } else if (difference > 30) {
       line(200, 850, 380, 770);
     } else if (difference > 20) {
       line(200, 850, 325, 735);
-    } else if (difference > 15) {
+    } else if (difference > 10) {
       line(200, 850, 310, 685);
-    } else if (difference > 7.5) {
+    } else if (difference > 5) {
       line(200, 850, 260, 685);
     } else {
       line(200, 850, 200, 685);
@@ -503,7 +503,7 @@ function draw() {
           ellipse(285, 525 - (count * 25), 75, 50);
         }
         let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
-        if (diff < 5) {
+        if (diff < 10) {
           success = 1;
           count++;
         }
@@ -516,7 +516,7 @@ function draw() {
         }
       }
       let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
-      if (diff < 5) {
+      if (diff < 10) {
         success = 1;
         count++;
       }
