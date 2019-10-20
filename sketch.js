@@ -507,6 +507,7 @@ function draw() {
           success = 1;
           count++;
         }
+          if(count != 15) {
         if (success > 0 && success < 20) { //checkmark fade out animation
           tint(255, 255 - (15 * success));
           image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
@@ -515,6 +516,7 @@ function draw() {
             success = 0;
           }
         }
+          }
       } else {
         if (cMajorScale[count] < 290.00) {
           ellipse(285, 525, 75, 50);
@@ -525,13 +527,12 @@ function draw() {
       }
       let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
       if (diff < 10) {
-        if (count != 14) {
-          console.log(count + "hi");
+        if (count != 15) {
           success = 1;
         }
         count++;
       }
-      if (count != 14) {
+      if (count != 15) {
         if (success > 0 && success < 20) { //checkmark fade out animation
           tint(255, 255 - (15 * success));
           image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
