@@ -15,4 +15,6 @@ https://musicmaster-code.github.io/ViolinTuner/
 The p5.js library is used for the UI/graphics (https://p5js.org/).
 The ml5.js library is used for pitch detection (https://ml5js.org/reference/api-PitchDetection/).
 
+## Screenshot
 
+<img src="https://i.ibb.co/x68tt0P/WebApp.png" width = "50%">
