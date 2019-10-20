@@ -486,15 +486,6 @@ function draw() {
     let e = document.getElementById("scales");
     let value = Number(e.options[e.selectedIndex].value);
     if (value == 5) {
-      if (count != 0 && count % 7 == 0) {
-        goingUp = false;
-      }
-      if (count == cMajorScale.length) {
-        stop();
-        change();
-        goingUp = true;
-        count = 0;
-      }
       if (goingUp) {
         if (cMajorScale[count] < 290.00) {
           ellipse(285, 525, 75, 50);
@@ -507,7 +498,6 @@ function draw() {
           success = 1;
           count++;
         }
-          if(count != 15) {
         if (success > 0 && success < 20) { //checkmark fade out animation
           tint(255, 255 - (15 * success));
           image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
@@ -516,7 +506,6 @@ function draw() {
             success = 0;
           }
         }
-          }
       } else {
         if (cMajorScale[count] < 290.00) {
           ellipse(285, 525, 75, 50);
@@ -542,16 +531,17 @@ function draw() {
           }
         }
       }
-    } else if (value == "10") { //f major scale
       if (count != 0 && count % 7 == 0) {
         goingUp = false;
       }
-      if (count == fMajorScale.length) {
+      if (count == cMajorScale.length) {
         stop();
         change();
         goingUp = true;
         count = 0;
+        success = 0;
       }
+    } else if (value == "10") { //f major scale
       let diff = Math.abs(1200 * Math.log(fMajorScale[count] / freq) / Math.log(2));
       if (diff < 10) {
         success = 1;
@@ -573,6 +563,16 @@ function draw() {
         ellipse(285, 450, 75, 50);
       } else {
         ellipse(285, 275 + ((count % 7) * 25), 75, 50);
+      }
+      if (count != 0 && count % 7 == 0) {
+        goingUp = false;
+      }
+      if (count == fMajorScale.length) {
+        stop();
+        change();
+        goingUp = true;
+        count = 0;
+        success=0;
       }
     }
   } else { //general tuning
