@@ -5,6 +5,18 @@ body {
   background: white;
 }
 
+.left-container {
+  margin-top: 300px;
+  width: 50%;
+  margin-right: 2%;
+  float: left;
+}
+
+.right-container {
+  width: 50%;
+  float: left;
+}
+
 .custom-select {
   position: relative;
   font-family: Arial;
@@ -69,10 +81,10 @@ body {
 }
 
 #startActivity {
-  padding-top: 5%;
+  padding-top: 100px;
+  margin-bottom: 100px;
   text-align: center;
   z-index: 99;
-
 }
 
 #startButton {
@@ -114,9 +126,35 @@ input[type='checkbox']:checked {
 h1 {
   text-align: center;
   font-size: 60px;
+  margin-bottom: 0px;
 }
 
 canvas {
   display: block;
   margin: auto;
+}
+
+@media only screen and (max-width: 892px) {
+  .left-container {
+    margin-top: 0%;
+    width: 100%;
+    margin-right: 0%;
+    float: none;
+  }
+
+  .right-container {
+    width: 50%;
+    float: none;
+  }
+
+  #startActivity {
+    padding-top: 15px;
+    margin-bottom: 15px;
+    text-align: center;
+    z-index: 99;
+  }
+
+  h1 {
+    margin-bottom: 10px;
+  }
 }
