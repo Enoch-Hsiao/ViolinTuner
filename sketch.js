@@ -12,6 +12,7 @@ let activityStarted = 0;
 let goingUp = true;
 let count = 0;
 let cMajorScale = [261.63, 292.66, 329.63, 349.32, 392.00, 440.00, 493.88, 523.25, 493.88, 440.00, 392.00, 349.23, 329.63, 293.66, 261.63]
+let fMajorScale = [349.23, 392.00, 440.00, 466.16, 523.25, 587.33, 659.26, 698.46, 659.26, 587.33, 523.25, 466.16, 440.00, 392.00, 349.23]
 let violinPitches = [note = {
     noteName: "G",
     octave: 3,
@@ -328,7 +329,6 @@ function closeAllSelect(elmnt) {
 document.addEventListener("click", closeAllSelect);
 
 function setup() {
-  console.log(pixelDensity() * displayWidth);
   createCanvas(400, 950);
   audioContext = getAudioContext();
   mic = new p5.AudioIn();
@@ -382,11 +382,11 @@ function change() {
     elem.value = "End Activity";
   } else {
     elem.value = "Start Activity";
+    activityStarted = 0;
     recorder.stop();
     if (document.getElementById("download").checked) {
       saveSound(soundFile, 'recording.wav');
     }
-    activityStarted = 0;
     count = 0;
     if (document.getElementById("playback").checked) {
       soundFile.play();
@@ -399,6 +399,7 @@ function stop() {
   startStop = null;
 }
 
+
 function draw() {
   background(255);
   textAlign(CENTER, CENTER);
@@ -408,12 +409,12 @@ function draw() {
       break;
     }
   }
-  if (Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)) < 15) {
-    fill(51, 255, 51);
+  if (Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)) < 10) { //cents calculation
+    fill(51, 255, 51); //within 10 cents
   } else {
-    fill(255, 153, 153);
+    fill(255, 153, 153); //not within 10 cents;
   }
-  arc(200, 850, 394, 400, PI, 0, OPEN);
+  arc(200, 850, 394, 400, PI, 0, OPEN); //gauge
   line(3, 850, 397, 850); //tick marks
   line(20, 770, 50, 782.75);
   line(90, 685, 110, 714);
@@ -478,9 +479,8 @@ function draw() {
   rect(0, 475, 400, 5);
   noTint();
   image(imgClef, -40, height / 6, imgClef.width / 1.63, imgClef.height / 1.63);
-
   if (activityStarted == 1) { //started test
-    if (document.getElementById("playback").checked) {
+    if (document.getElementById("playback").checked || document.getElementById("download").checked) {
       recorder.record(soundFile); //start recording
     }
     let e = document.getElementById("scales");
@@ -507,6 +507,14 @@ function draw() {
           success = 1;
           count++;
         }
+        if (success > 0 && success < 20) { //checkmark fade out animation
+          tint(255, 255 - (15 * success));
+          image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
+          success++;
+          if (success == 20) {
+            success = 0;
+          }
+        }
       } else {
         if (cMajorScale[count] < 290.00) {
           ellipse(285, 525, 75, 50);
@@ -517,16 +525,53 @@ function draw() {
       }
       let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
       if (diff < 10) {
+        if (count != 14) {
+          console.log(count + "hi");
+          success = 1;
+        }
+        count++;
+      }
+      if (count != 14) {
+        if (success > 0 && success < 20) { //checkmark fade out animation
+          tint(255, 255 - (15 * success));
+          image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
+          success++;
+          if (success == 20) {
+            success = 0;
+          }
+        }
+      }
+    } else if (value == "10") { //f major scale
+      if (count != 0 && count % 7 == 0) {
+        goingUp = false;
+      }
+      if (count == fMajorScale.length) {
+        stop();
+        change();
+        goingUp = true;
+        count = 0;
+      }
+      let diff = Math.abs(1200 * Math.log(fMajorScale[count] / freq) / Math.log(2));
+      if (diff < 10) {
         success = 1;
         count++;
       }
-    }
-    if (success > 0 && success < 16) { //checkmark fade out animation
-      tint(255, 255 - (17 * success));
-      image(imgCheckMark, -20, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
-      success++;
-      if (success == 15) {
-        success = 0;
+      if (count != 15) {
+        if (success > 0 && success < 20) { //checkmark fade out animation
+          tint(255, 255 - (15 * success));
+          image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
+          success++;
+          if (success == 20) {
+            success = 0;
+          }
+        }
+      }
+      if (goingUp) {
+        ellipse(285, 450 - (count * 25), 75, 50);
+      } else if (count == 14) {
+        ellipse(285, 450, 75, 50);
+      } else {
+        ellipse(285, 275 + ((count % 7) * 25), 75, 50);
       }
     }
   } else { //general tuning
