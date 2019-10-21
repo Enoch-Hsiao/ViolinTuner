@@ -17,4 +17,4 @@ https://musicmaster-code.github.io/ViolinTuner/
 
 ## Screenshot
 
-<img src="https://i.ibb.co/JH25DWF/WebApp.png" width="100%">
+<img src="https://i.ibb.co/T81rrDX/WebApp.png" width="100%" border="0">
