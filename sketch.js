@@ -484,7 +484,7 @@ function draw() { //where everything happens
     } else if (difference > 22.5) {
       line(200, 850, 330, 750);
     } else if (difference > 15) {
-      line(200, 850, 300, 625);
+      line(200, 850, 300, 720);
     } else if (difference > 7.5) {
       line(200, 850, 250, 685);
     } else {
