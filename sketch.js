@@ -333,13 +333,10 @@ function closeAllSelect(elmnt) {
 document.addEventListener("click", closeAllSelect);
 
 function setup() {
-  console.log(windowWidth + " " + windowHeight);
   if (windowWidth < 435) {
     createCanvas(windowWidth - 17, windowHeight);
-    smallScreen = 75;
   } else {
     createCanvas(400, 950);
-    smallScreen = 0;
   }
   audioContext = getAudioContext();
   mic = new p5.AudioIn();
@@ -550,7 +547,10 @@ function draw() { //where everything happens
     }
     fill(0);
     textSize(40);
-    text(freq.toFixed(0) + " Hz", width / 2, height * 0.85); //frequency value   
+    text(freq.toFixed(0) + " Hz", width / 2, height * 0.85); //frequency value
+    textSize(15);
+    text("© 2019 Enoch Hsiao", width/2, height * 0.95);
+    
     if (activityStarted == 1) { //started test
       let e = document.getElementById("scales");
       let value = Number(e.options[e.selectedIndex].value);
@@ -793,7 +793,10 @@ function draw() { //where everything happens
         image(imgArrow, (windowWidth - 50) / 2, height * 0.125, width / 10, height / 10);
       }
     }
-    text(freq.toFixed(0) + " Hz", width / 2, height * 0.03)
+    textSize(30);
+    text(freq.toFixed(0) + " Hz", width / 2, height * 0.90);
+    textSize(15);
+    text("© 2019 Enoch Hsiao", width/2, height * 0.95); 
 
     if (activityStarted == 1) { //started test
       let e = document.getElementById("scales");
