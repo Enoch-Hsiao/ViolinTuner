@@ -13,6 +13,7 @@ let imgEKey;
 let activityStarted = 0;
 let goingUp = true;
 let count = 0;
+let smallScreen = 0;
 let cMajorScale = [261.63, 292.66, 329.63, 349.32, 392.00, 440.00, 493.88, 523.25, 493.88, 440.00, 392.00, 349.23, 329.63, 293.66, 261.63]
 let fMajorScale = [349.23, 392.00, 440.00, 466.16, 523.25, 587.33, 659.26, 698.46, 659.26, 587.33, 523.25, 466.16, 440.00, 392.00, 349.23]
 let eMajorScale = [329.63, 369.99, 415.30, 440.00, 493.88, 554.37, 622.25, 659.26, 622.25, 554.37, 493.88, 440.00, 415.30, 369.99, 329.63]
@@ -205,7 +206,7 @@ let violinPitches = [note = {
   note = {
     noteName: "D",
     octave: 6,
-    sharp: true,
+    sharp: false,
     frequency: 1174.7
   },
   note = {
@@ -332,7 +333,14 @@ function closeAllSelect(elmnt) {
 document.addEventListener("click", closeAllSelect);
 
 function setup() {
-  createCanvas(400, 950);
+  console.log(windowWidth + " " + windowHeight);
+  if (windowWidth < 435) {
+    createCanvas(windowWidth - 17, windowHeight);
+    smallScreen = 75;
+  } else {
+    createCanvas(400, 950);
+    smallScreen = 0;
+  }
   audioContext = getAudioContext();
   mic = new p5.AudioIn();
   mic.start(listening);
@@ -342,6 +350,7 @@ function setup() {
   img8va = loadImage('8va.PNG');
   imgFKey = loadImage('fmajkey.png');
   imgEKey = loadImage('emajkey.png');
+  imgArrow = loadImage('Arrow.png');
   recorder = new p5.SoundRecorder();
   recorder.setInput(mic);
   soundFile = new p5.SoundFile();
@@ -418,100 +427,154 @@ function checkmark() { //checkmark fade out animation
       success = 0;
     }
   }
+}
 
+function findClosest(target) {
+  if (target == undefined) {
+    return 0;
+  }
+  if (target <= violinPitches[0].frequency) {
+    return 0;
+  }
+  if (target >= violinPitches[violinPitches.length - 1].frequency) {
+    return violinPitches.length - 1;
+  }
+
+  let i = 0,
+    j = violinPitches.length,
+    mid = 0;
+  while (i < j) {
+    mid = Math.floor((i + j) / 2);
+    if (violinPitches[mid].frequency === target) {
+      return mid;
+    }
+    if (target < violinPitches[mid].frequency) {
+      if (mid > 0 && target > violinPitches[mid - 1].frequency)
+        return getClosest(mid - 1, mid, target);
+      j = mid;
+    } else {
+      if (mid < violinPitches.length - 1 && target < violinPitches[mid + 1].frequency)
+        return getClosest(mid, mid + 1, target);
+      i = mid + 1;
+    }
+  }
+  return mid;
+}
+
+function getClosest(val1, val2, target) {
+  if (Math.abs(target - violinPitches[val1].frequency) >= Math.abs(target - violinPitches[val2].frequency)) {
+    return val2;
+  } else {
+    return val1;
+  }
 }
 
 function draw() { //where everything happens
+  if (windowWidth < 435) {
+    resizeCanvas(windowWidth - 17, windowHeight);
+  } else {
+    resizeCanvas(400, 950);
+  }
   background(255);
   textAlign(CENTER, CENTER);
-  let i = 0;
-  for (i; i < violinPitches.length - 1; i++) { //find closest note
-    if (Math.abs(violinPitches[i].frequency - freq) < Math.abs(violinPitches[i + 1].frequency - freq)) {
-      break;
-    }
-  }
-  if (Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)) < 15) { //cents calculation
-    fill(51, 255, 51); //within 10 cents
-  } else {
-    fill(255, 153, 153); //not within 10 cents;
-  }
-  arc(200, 850, 350, 400, PI, 0, OPEN); //gauge
-  line(25, 850, 375, 850); //tick marks
-  line(40, 770, 70, 780);
-  line(110, 680, 125, 705);
-  line(275, 705, 290, 680);
-  line(330, 780, 360, 770);
-  fill(0);
-  textSize(20);
-  text("-15", width / 3, height * 0.76);
-  text("+15", width / 1.55, height * 0.76);
-  text("-30", width / 4.5, height * 0.81);
-  text("+30", width / 1.3, height * 0.81);
-  strokeWeight(4);
-  fill(0);
-  textSize(25);
-  if (violinPitches[i].sharp == true) { //closest note
-    text(violinPitches[i].noteName + "#" + violinPitches[i].octave, width / 2, height * 0.725);
-  } else {
-    text(violinPitches[i].noteName + violinPitches[i].octave, width / 2, height * 0.725);
-  }
-  if (violinPitches[i + 1].sharp == true) { //closest note to the right
-    text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, width / 1.2, height * 0.85);
-  } else {
-    text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, width / 1.2, height * 0.85);
-  }
-  if (i > 0 && violinPitches[i - 1].sharp == true) { //closest note to the left
-    text(violinPitches[i - 1].noteName + "#" + violinPitches[i - 1].octave, width / 6, height * 0.85);
-  } else if (i > 0) {
-    text(violinPitches[i - 1].noteName + violinPitches[i - 1].octave, width / 6, height * 0.85);
-  }
-  let difference = Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)); //cents
-  if (violinPitches[i].frequency - freq > 0) { //left side of speedometer
-    if (difference > 30) {
-      line(50, 810, 200, 850);
-    } else if (difference > 22.5) {
-      line(70, 750, 200, 850);
-    } else if (difference > 15) {
-      line(100, 720, 200, 850);
-    } else if (difference > 7.5) {
-      line(150, 685, 200, 850);
+  let i = findClosest(freq);
+
+  if (windowWidth > 435) { //larger screen
+    image(imgClef, -40, height / 6, imgClef.width / 1.63, imgClef.height / 1.63);
+    fill(0);
+    rect(0, 275, 400, 5);
+    rect(0, 325, 400, 5);
+    rect(0, 375, 400, 5);
+    rect(0, 425, 400, 5);
+    rect(0, 475, 400, 5);
+    if (Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)) < 15) { //cents calculation
+      fill(51, 255, 51); //within 10 cents
     } else {
-      line(200, 685, 200, 850);
+      fill(255, 153, 153); //not within 10 cents;
     }
-  } else { //right side of speedometer
-    if (difference > 30) {
-      line(200, 850, 350, 810);
-    } else if (difference > 22.5) {
-      line(200, 850, 330, 750);
-    } else if (difference > 15) {
-      line(200, 850, 300, 720);
-    } else if (difference > 7.5) {
-      line(200, 850, 250, 685);
+    arc(200, 850, 350, 400, PI, 0, OPEN); //gauge
+    line(25, 850, 375, 850); //tick marks
+    line(40, 770, 70, 780);
+    line(110, 680, 125, 705);
+    line(275, 705, 290, 680);
+    line(330, 780, 360, 770);
+    fill(0);
+    textSize(20);
+    text("-15", width / 3, height * 0.76);
+    text("+15", width / 1.55, height * 0.76);
+    text("-30", width / 4.5, height * 0.81);
+    text("+30", width / 1.3, height * 0.81);
+    strokeWeight(4);
+    fill(0);
+    textSize(25);
+    if (violinPitches[i].sharp == true) { //closest note
+      text(violinPitches[i].noteName + "#" + violinPitches[i].octave, width / 2, height * 0.725);
     } else {
-      line(200, 850, 200, 685);
+      text(violinPitches[i].noteName + violinPitches[i].octave, width / 2, height * 0.725);
     }
-  }
-  fill(0);
-  textSize(40);
-  text(freq.toFixed(0) + " Hz", width / 2, height * 0.85); //frequency value
-  fill(0);
-  rect(0, 275, 400, 5);
-  rect(0, 325, 400, 5);
-  rect(0, 375, 400, 5);
-  rect(0, 425, 400, 5);
-  rect(0, 475, 400, 5);
-  noTint();
-  image(imgClef, -40, height / 6, imgClef.width / 1.63, imgClef.height / 1.63);
-  if (activityStarted == 1) { //started test
-    let e = document.getElementById("scales");
-    let value = Number(e.options[e.selectedIndex].value);
-    if (value == 5) { //C Major Scale
-      if (goingUp) {
-        if (cMajorScale[count] < 290.00) {
-          ellipse(285, 525, 75, 50);
-          rect(225, 525, 125, 5);
+    if (violinPitches[i + 1].sharp == true) { //closest note to the right
+      text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, width / 1.2, height * 0.85);
+    } else {
+      text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, width / 1.2, height * 0.85);
+    }
+    if (i > 0 && violinPitches[i - 1].sharp == true) { //closest note to the left
+      text(violinPitches[i - 1].noteName + "#" + violinPitches[i - 1].octave, width / 6, height * 0.85);
+    } else if (i > 0) {
+      text(violinPitches[i - 1].noteName + violinPitches[i - 1].octave, width / 6, height * 0.85);
+    }
+    let difference = Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)); //cents
+    if (violinPitches[i].frequency - freq > 0) { //left side of speedometer
+      if (difference > 30) {
+        line(50, 810, 200, 850);
+      } else if (difference > 22.5) {
+        line(70, 750, 200, 850);
+      } else if (difference > 15) {
+        line(100, 720, 200, 850);
+      } else if (difference > 7.5) {
+        line(150, 685, 200, 850);
+      } else {
+        line(200, 685, 200, 850);
+      }
+    } else { //right side of speedometer
+      if (difference > 30) {
+        line(200, 850, 350, 810);
+      } else if (difference > 22.5) {
+        line(200, 850, 330, 750);
+      } else if (difference > 15) {
+        line(200, 850, 300, 720);
+      } else if (difference > 7.5) {
+        line(200, 850, 250, 685);
+      } else {
+        line(200, 850, 200, 685);
+      }
+    }
+    fill(0);
+    textSize(40);
+    text(freq.toFixed(0) + " Hz", width / 2, height * 0.85); //frequency value   
+    if (activityStarted == 1) { //started test
+      let e = document.getElementById("scales");
+      let value = Number(e.options[e.selectedIndex].value);
+      if (value == 5) { //C Major Scale
+        if (goingUp) {
+          if (cMajorScale[count] < 290.00) {
+            ellipse(285, 525, 75, 50);
+            rect(225, 525, 125, 5);
+          } else {
+            ellipse(285, 525 - (count * 25), 75, 50);
+          }
+          let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
+          if (diff < 10) {
+            success = 1;
+            count++;
+          }
+          checkmark();
         } else {
-          ellipse(285, 525 - (count * 25), 75, 50);
+          if (cMajorScale[count] < 290.00) {
+            ellipse(285, 525, 75, 50);
+            rect(225, 525, 125, 5);
+          } else {
+            ellipse(285, 350 + ((count % 7) * 25), 75, 50);
+          }
         }
         let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
         if (diff < 10) {
@@ -519,174 +582,404 @@ function draw() { //where everything happens
           count++;
         }
         checkmark();
-      } else {
-        if (cMajorScale[count] < 290.00) {
-          ellipse(285, 525, 75, 50);
-          rect(225, 525, 125, 5);
-        } else {
-          ellipse(285, 350 + ((count % 7) * 25), 75, 50);
+        if (count != 0 && count % 7 == 0) {
+          goingUp = false;
         }
-      }
-      let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
-      if (diff < 10) {
-        success = 1;
-        count++;
-      }
-      checkmark();
-      if (count != 0 && count % 7 == 0) {
-        goingUp = false;
-      }
-      if (count == cMajorScale.length) {
-        stop();
-        change();
-        goingUp = true;
-        count = 0;
-        success = 0;
-      }
-    } else if (value == "10") { //F Major Scale
-      imgFKey.resize(200, 200);
-      image(imgFKey, 0.5, imgFKey.width / 5, imgFKey.length / 5);
-      let diff = Math.abs(1200 * Math.log(fMajorScale[count] / freq) / Math.log(2));
-      if (diff < 10) {
-        success = 1;
-        count++;
-      }
-      checkmark();
-      if (goingUp) {
-        ellipse(285, 450 - (count * 25), 75, 50);
-      } else if (count == 14) {
-        ellipse(285, 450, 75, 50);
-      } else {
-        ellipse(285, 275 + ((count % 7) * 25), 75, 50);
-      }
-      if (count != 0 && count % 7 == 0) {
-        goingUp = false;
-      }
-      if (count == fMajorScale.length) {
-        stop();
-        change();
-        goingUp = true;
-        count = 0;
-        success = 0;
-      }
-    } else if (value == "9") { //E Major Scale
-      imgEKey.resize(200, 200);
-      image(imgEKey, 0.5, imgEKey.width / 5, imgEKey.length / 5);
-      let diff = Math.abs(1200 * Math.log(eMajorScale[count] / freq) / Math.log(2));
-      if (diff < 10) {
-        success = 1;
-        count++;
-      }
-      if (count != 15) {
-        if (success > 0 && success < 20) { //checkmark fade out animation
-          tint(255, 255 - (15 * success));
-          image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
-          success++;
-          if (success == 20) {
-            success = 0;
+        if (count == cMajorScale.length) {
+          stop();
+          change();
+          goingUp = true;
+          count = 0;
+          success = 0;
+        }
+      } else if (value == "10") { //F Major Scale
+        imgFKey.resize(200, 200);
+        image(imgFKey, 0.5, imgFKey.width / 5, imgFKey.length / 5);
+        let diff = Math.abs(1200 * Math.log(fMajorScale[count] / freq) / Math.log(2));
+        if (diff < 10) {
+          success = 1;
+          count++;
+        }
+        checkmark();
+        if (goingUp) {
+          ellipse(285, 450 - (count * 25), 75, 50);
+        } else if (count == 14) {
+          ellipse(285, 450, 75, 50);
+        } else {
+          ellipse(285, 275 + ((count % 7) * 25), 75, 50);
+        }
+        if (count != 0 && count % 7 == 0) {
+          goingUp = false;
+        }
+        if (count == fMajorScale.length) {
+          stop();
+          change();
+          goingUp = true;
+          count = 0;
+          success = 0;
+        }
+      } else if (value == "9") { //E Major Scale
+        imgEKey.resize(200, 200);
+        image(imgEKey, 0.5, imgEKey.width / 5, imgEKey.length / 5);
+        let diff = Math.abs(1200 * Math.log(eMajorScale[count] / freq) / Math.log(2));
+        if (diff < 10) {
+          success = 1;
+          count++;
+        }
+        if (count != 15) {
+          if (success > 0 && success < 20) { //checkmark fade out animation
+            tint(255, 255 - (15 * success));
+            image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
+            success++;
+            if (success == 20) {
+              success = 0;
+            }
           }
         }
+        if (goingUp) {
+          ellipse(285, 475 - (count * 25), 75, 50);
+        } else if (count == 14) {
+          ellipse(285, 475, 75, 50);
+        } else {
+          ellipse(285, 300 + ((count % 7) * 25), 75, 50);
+        }
+        if (count != 0 && count % 7 == 0) {
+          goingUp = false;
+        }
+        if (count == eMajorScale.length) {
+          stop();
+          change();
+          goingUp = true;
+          count = 0;
+          success = 0;
+        }
       }
-      if (goingUp) {
-        ellipse(285, 475 - (count * 25), 75, 50);
-      } else if (count == 14) {
-        ellipse(285, 475, 75, 50);
-      } else {
-        ellipse(285, 300 + ((count % 7) * 25), 75, 50);
-      }
-      if (count != 0 && count % 7 == 0) {
-        goingUp = false;
-      }
-      if (count == eMajorScale.length) {
-        stop();
-        change();
-        goingUp = true;
-        count = 0;
-        success = 0;
+    } else { //General tuning
+      let diff = freq - violinPitches[i].frequency;
+      let count = i;
+      if (diff < 15 && diff > -15) {
+        if (i < 7) { //lower ledger lines G3 to C#3
+          if (i > 4 && i < 9) {
+            count++;
+          }
+          rect(312.5, 375, 10, 225 - (Math.floor(count / 2) * 25));
+          if (i < 4) { //second ledger line
+            rect(225, 575, 125, 5);
+          }
+          rect(225, 525, 125, 5);
+          if (i > 4) {
+            rect(312.5, 325, 10, 200);
+          }
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 100);
+            ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+          } else {
+            ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+          }
+        } else if (i > 6 && i < 26) { //middle notes
+          count += Math.floor(i / 12) * 2;
+          if (i % 12 > 4) {
+            count++;
+          }
+          if (i % 12 > 9) {
+            count++;
+          }
+          if (i < 17) {
+            rect(312.5, 375 - (Math.floor(count / 2) * 25), 10, 225);
+          } else {
+            rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
+          }
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
+          }
+          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+        } else if (i > 25 && i < 34) { //Upper note ledger lines
+          count += Math.floor(i / 12) * 2;
+          if (i % 12 > 4) {
+            count++;
+          }
+          if (i % 12 > 9) {
+            count++;
+          }
+          rect(225, 225, 125, 5); //first upper ledger line
+          if (i > 28) { //second upper ledger line
+            rect(225, 175, 125, 5);
+          }
+          if (i > 32) { //third upper ledger line
+            rect(225, 125, 125, 5);
+            rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 250); //High E
+          }
+          rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
+          }
+          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+        } else if (i > 33 && i < 46) {
+          count -= 12;
+          count += Math.floor((i - 12) / 12) * 2;
+          if ((i - 12) % 12 > 4) {
+            count++;
+          }
+          if ((i - 12) % 12 > 9) {
+            count++;
+          }
+          rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
+          if (i > 37) {
+            rect(225, 225, 125, 5); //first upper ledger line 
+          }
+          if (violinPitches[(i - 12)].sharp == true) {
+            image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
+          }
+          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+          image(img8va, 200, 525 - (Math.floor(count / 2) * 25), 150, 50);
+        }
       }
     }
-  } else { //General tuning
-    let diff = freq - violinPitches[i].frequency;
-    let count = i;
-    if (diff < 15 && diff > -15) {
-      if (freq < 290.00) { //lower ledger lines G3 to C#3
-        if (i > 4 && i < 9) {
-          count++;
-        }
-        rect(312.5, 375, 10, 225 - (Math.floor(count / 2) * 25));
-        if (freq < 240.0) { //second ledger line
-          rect(225, 575, 125, 5);
-        }
-        rect(225, 525, 125, 5);
-        if (freq > 260.0) {
-          rect(312.5, 325, 10, 200);
-        }
-        if (violinPitches[i].sharp == true) {
-          image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 100);
-          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+  } else {
+    image(imgClef, -40, 160, imgClef.width / 2, imgClef.height / 2.4);
+    fill(0);
+    rect(0, 235, windowWidth, 4);
+    rect(0, 270, windowWidth, 4);
+    rect(0, 305, windowWidth, 4);
+    rect(0, 340, windowWidth, 4);
+    rect(0, 375, windowWidth, 4);
+    strokeWeight(7);
+    line(5, 5, 5, windowHeight / 8); //tick marks
+    line((windowWidth - 17) / 5, 5, (windowWidth - 17) / 5, windowHeight / 8);
+    line((windowWidth - 17) / 2.5, 5, (windowWidth - 17) / 2.5, windowHeight / 8);
+    line((windowWidth - 17) / (5 / 3), 5, (windowWidth - 17) / (5 / 3), windowHeight / 8);
+    line((windowWidth - 17) / (5 / 4), 5, (windowWidth - 17) / (5 / 4), windowHeight / 8);
+    line(windowWidth - 21.5, 5, windowWidth - 21.5, windowHeight / 8);
+    fill(0);
+    textSize(20);
+    text("-30", (windowWidth - 17) / 5, height * 0.175);
+    text("-15", (windowWidth - 18.5) / 2.5, height * 0.175);
+    text("+15", (windowWidth - 17.5) / (5 / 3), height * 0.175);
+    text("+30", (windowWidth - 17) / (5 / 4), height * 0.175);
+    strokeWeight(4);
+    fill(0);
+    textSize(25);
+    if (violinPitches[i].sharp == true) { //closest note
+      text(violinPitches[i].noteName + "#" + violinPitches[i].octave, (windowWidth - 17) / 2, height * 0.1);
+    } else {
+      text(violinPitches[i].noteName + violinPitches[i].octave, (windowWidth - 17) / 2, height * 0.1);
+    }
+    if (violinPitches[i + 1].sharp == true) { //closest note to the right
+      text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, (windowWidth - 17) / 10 * 9, height * 0.1);
+    } else {
+      text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, (windowWidth - 17) / 10 * 9, height * 0.1);
+    }
+    if (i > 0 && violinPitches[i - 1].sharp == true) { //closest note to the left
+      text(violinPitches[i - 1].noteName + "#" + violinPitches[i - 1].octave, (windowWidth - 17) / 10, height * 0.1);
+    } else if (i > 0) {
+      text(violinPitches[i - 1].noteName + violinPitches[i - 1].octave, (windowWidth - 17) / 10, height * 0.1);
+    }
+    let difference = Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2));
+    textSize(17);
+    if (freq - violinPitches[i].frequency > 0) { //right side of speedometer
+      if (difference > 30) {
+        image(imgArrow, (windowWidth - 50) / 10 * 9.5, height * 0.125, width / 10, height / 10);
+      } else if (difference > 15) {
+        image(imgArrow, (windowWidth - 50) / 10 * 7.25, height * 0.125, width / 10, height / 10);
+      } else {
+        image(imgArrow, (windowWidth - 50) / 2, height * 0.125, width / 10, height / 10);
+      }
+    } else { //left side of speedometer
+      if (difference > 30) {
+        image(imgArrow, (windowWidth - 50) / 17, height * 0.125, width / 10, height / 10);
+      } else if (difference > 15) {
+        image(imgArrow, (windowWidth - 50) / 10 * 2.75, height * 0.125, width / 10, height / 10);
+      } else {
+        image(imgArrow, (windowWidth - 50) / 2, height * 0.125, width / 10, height / 10);
+      }
+    }
+    text(freq.toFixed(0) + " Hz", width / 2, height * 0.03)
+
+    if (activityStarted == 1) { //started test
+      let e = document.getElementById("scales");
+      let value = Number(e.options[e.selectedIndex].value);
+      if (value == 5) { //C Major Scale
+        if (goingUp) {
+          if (cMajorScale[count] < 290.00) {
+            ellipse(285, 525, 75, 50);
+            rect(225, 525, 125, 5);
+          } else {
+            ellipse(285, 525 - (count * 25), 75, 50);
+          }
+          let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
+          if (diff < 10) {
+            success = 1;
+            count++;
+          }
+          checkmark();
         } else {
-          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+          if (cMajorScale[count] < 290.00) {
+            ellipse(285, 525, 75, 50);
+            rect(225, 525, 125, 5);
+          } else {
+            ellipse(285, 350 + ((count % 7) * 25), 75, 50);
+          }
         }
-      } else if (freq > 290.00 && freq < 870) { //middle notes
-        count += Math.floor(i / 12) * 2;
-        if (i % 12 > 4) {
+        let diff = Math.abs(1200 * Math.log(cMajorScale[count] / freq) / Math.log(2));
+        if (diff < 10) {
+          success = 1;
           count++;
         }
-        if (i % 12 > 9) {
+        checkmark();
+        if (count != 0 && count % 7 == 0) {
+          goingUp = false;
+        }
+        if (count == cMajorScale.length) {
+          stop();
+          change();
+          goingUp = true;
+          count = 0;
+          success = 0;
+        }
+      } else if (value == "10") { //F Major Scale
+        imgFKey.resize(200, 200);
+        image(imgFKey, 0.5, imgFKey.width / 5, imgFKey.length / 5);
+        let diff = Math.abs(1200 * Math.log(fMajorScale[count] / freq) / Math.log(2));
+        if (diff < 10) {
+          success = 1;
           count++;
         }
-        if (freq < 510) {
-          rect(312.5, 375 - (Math.floor(count / 2) * 25), 10, 225);
+        checkmark();
+        if (goingUp) {
+          ellipse(285, 450 - (count * 25), 75, 50);
+        } else if (count == 14) {
+          ellipse(285, 450, 75, 50);
         } else {
-          rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
+          ellipse(285, 275 + ((count % 7) * 25), 75, 50);
         }
-        if (violinPitches[i].sharp == true) {
-          image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
-          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+        if (count != 0 && count % 7 == 0) {
+          goingUp = false;
+        }
+        if (count == fMajorScale.length) {
+          stop();
+          change();
+          goingUp = true;
+          count = 0;
+          success = 0;
+        }
+      } else if (value == "9") { //E Major Scale
+        imgEKey.resize(200, 200);
+        image(imgEKey, 0.5, imgEKey.width / 5, imgEKey.length / 5);
+        let diff = Math.abs(1200 * Math.log(eMajorScale[count] / freq) / Math.log(2));
+        if (diff < 10) {
+          success = 1;
+          count++;
+        }
+        if (count != 15) {
+          if (success > 0 && success < 20) { //checkmark fade out animation
+            tint(255, 255 - (15 * success));
+            image(imgCheckMark, 10, height / 4, imgCheckMark.width / 2, imgCheckMark.height / 2);
+            success++;
+            if (success == 20) {
+              success = 0;
+            }
+          }
+        }
+        if (goingUp) {
+          ellipse(285, 475 - (count * 25), 75, 50);
+        } else if (count == 14) {
+          ellipse(285, 475, 75, 50);
         } else {
-          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
+          ellipse(285, 300 + ((count % 7) * 25), 75, 50);
         }
-      } else if (freq > 870 && freq < 1380) { //Upper note ledger lines
-        count += Math.floor(i / 12) * 2;
-        if (i % 12 > 4) {
-          count++;
+        if (count != 0 && count % 7 == 0) {
+          goingUp = false;
         }
-        if (i % 12 > 9) {
-          count++;
+        if (count == eMajorScale.length) {
+          stop();
+          change();
+          goingUp = true;
+          count = 0;
+          success = 0;
         }
-        rect(225, 225, 125, 5); //first upper ledger line
-        if (freq > 1040.0) { //second upper ledger line
-          rect(225, 175, 125, 5);
+      }
+    } else { //General tuning
+      let diff = freq - violinPitches[i].frequency;
+      let count = i;
+      if (diff < 15 && diff > -15) {
+        if (i < 7) { //lower ledger lines G3 to C#3
+          if (i > 4 && i < 9) {
+            count++;
+          }
+          rect(windowWidth * (2 / 3), 305, 4, 160 - (Math.floor(count / 2) * 17.5));
+          if (i < 4) { //second ledger line
+            rect(windowWidth * (2 / 3) - 70, 445, 105, 4);
+          }
+          rect(windowWidth * (2 / 3) - 70, 410, 105, 4);
+          if (i > 4) {
+            rect(windowWidth * (2 / 3), 270, 4, 35);
+          }
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+          }
+          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+        } else if (i > 6 && i < 26) { //middle notes
+          count += Math.floor(i / 12) * 2;
+          if (i % 12 > 4) {
+            count++;
+          }
+          if (i % 12 > 9) {
+            count++;
+          }
+          if (i < 17) {
+            rect(windowWidth * (2 / 3), 335 - (Math.floor(count / 2) * 17.5), 4, 120);
+          } else {
+            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 120);
+          }
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+          }
+          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+        } else if (i > 25 && i < 34) { //Upper note ledger lines
+          count += Math.floor(i / 12) * 2;
+          if (i % 12 > 4) {
+            count++;
+          }
+          if (i % 12 > 9) {
+            count++;
+          }
+          rect(windowWidth * (2 / 3) - 70, 200, 105, 4); //first upper ledger line
+          if (i > 28) { //second upper ledger line
+            rect(windowWidth * (2 / 3) - 70, 165, 105, 4);
+            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 162.5)
+          }
+          if (i > 32) { //third upper ledger line
+            rect(windowWidth * (2 / 3) - 70, 130, 105, 4);
+            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 180); //High E
+          }
+          rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 145);
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+          }
+          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+        } else if (i > 33 && i < 46) {
+          count -= 12;
+          count += Math.floor((i - 12) / 12) * 2;
+          if ((i - 12) % 12 > 4) {
+            count++;
+          }
+          if ((i - 12) % 12 > 9) {
+            count++;
+          }
+          if (i < 17) {
+            rect(windowWidth * (2 / 3), 335 - (Math.floor(count / 2) * 17.5), 4, 120);
+          } else {
+            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 120);
+          }
+          if (violinPitches[i].sharp == true) {
+            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+          }
+          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+          if (i > 37) {
+            rect(windowWidth * (2 / 3) - 70, 200, 105, 4); //first upper ledger line 
+          }
+          image(img8va, windowWidth * (2 / 3) - 100, 410 - (Math.floor(count / 2) * 17.5), 150, 50);
         }
-        if (freq > 1300.0) { //third upper ledger line
-          rect(225, 125, 125, 5);
-          rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 250); //High E
-        }
-        rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
-        if (violinPitches[i].sharp == true) {
-          image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
-          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
-        } else {
-          ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
-        }
-      } else if (freq > 1350 && freq < 2700) {
-        count -= 12;
-        count += Math.floor((i - 12) / 12) * 2;
-        if ((i - 12) % 12 > 4) {
-          count++;
-        }
-        if ((i - 12) % 12 > 9) {
-          count++;
-        }
-        rect(247.5, 600 - (Math.floor(count / 2) * 25), 10, 225);
-        if (freq > 1750) {
-          rect(225, 225, 125, 5); //first upper ledger line 
-        }
-        if (violinPitches[(i - 12)].sharp == true) {
-          image(imgSharp, 160, 550 - (Math.floor(count / 2) * 25), 75, 105);
-        }
-        ellipse(285, 600 - (Math.floor(count / 2) * 25), 75, 50);
-        image(img8va, 200, 525 - (Math.floor(count / 2) * 25), 150, 50);
       }
     }
   }
