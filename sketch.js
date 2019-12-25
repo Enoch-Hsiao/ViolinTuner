@@ -746,8 +746,7 @@ function draw() { //where everything happens
       fill(255, 153, 153); //not within 10 cents;
     }
     strokeWeight(0);
-    rect(0, 0, windowWidth, (windowWidth) / 5);
-
+    rect(0, 0, windowWidth, windowHeight / 9);
     fill(0);
     strokeWeight(4);
     rect(0, middle - scaling, windowWidth, 4);
@@ -756,58 +755,57 @@ function draw() { //where everything happens
     rect(0, middle + scaling * 2, windowWidth, 4);
     rect(0, middle + scaling * 3, windowWidth, 4);
     strokeWeight(7);
-    line(5, 5, 5, windowHeight / 8); //tick marks
-    line((windowWidth - 17) / 5, 5, (windowWidth - 17) / 5, windowHeight / 8);
-    line((windowWidth - 17) / 2.5, 5, (windowWidth - 17) / 2.5, windowHeight / 8);
-    line((windowWidth - 17) / (5 / 3), 5, (windowWidth - 17) / (5 / 3), windowHeight / 8);
-    line((windowWidth - 17) / (5 / 4), 5, (windowWidth - 17) / (5 / 4), windowHeight / 8);
-    line(windowWidth - 21.5, 5, windowWidth - 21.5, windowHeight / 8);
+    line(5, 5, 5, windowHeight / 10); //tick marks
+    line((windowWidth - 17) / 5, 5, (windowWidth - 17) / 5, windowHeight / 10);
+    line((windowWidth - 17) / 2.5, 5, (windowWidth - 17) / 2.5, windowHeight / 10);
+    line((windowWidth - 17) / (5 / 3), 5, (windowWidth - 17) / (5 / 3), windowHeight / 10);
+    line((windowWidth - 17) / (5 / 4), 5, (windowWidth - 17) / (5 / 4), windowHeight / 10);
+    line(windowWidth - 21.5, 5, windowWidth - 21.5, windowHeight / 10);
     fill(0);
     textSize(20);
-    text("-30", (windowWidth - 17) / 5, height * 0.175);
-    text("-15", (windowWidth - 18.5) / 2.5, height * 0.175);
-    text("+15", (windowWidth - 17.5) / (5 / 3), height * 0.175);
-    text("+30", (windowWidth - 17) / (5 / 4), height * 0.175);
-
+    text("-30", (windowWidth - 17) / 5, windowHeight / 7.5);
+    text("-15", (windowWidth - 18.5) / 2.5, windowHeight / 7.5);
+    text("+15", (windowWidth - 17.5) / (5 / 3), windowHeight / 7.5);
+    text("+30", (windowWidth - 17) / (5 / 4), windowHeight / 7.5);
     strokeWeight(4);
     fill(0);
     textSize(25);
     if (violinPitches[i].sharp == true) { //closest note
-      text(violinPitches[i].noteName + "#" + violinPitches[i].octave, (windowWidth - 17) / 2, height * 0.1);
+      text(violinPitches[i].noteName + "#" + violinPitches[i].octave, (windowWidth - 17) / 2, height * 0.08);
     } else {
-      text(violinPitches[i].noteName + violinPitches[i].octave, (windowWidth - 17) / 2, height * 0.1);
+      text(violinPitches[i].noteName + violinPitches[i].octave, (windowWidth - 17) / 2, height * 0.08);
     }
     if (violinPitches[i + 1].sharp == true) { //closest note to the right
-      text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, (windowWidth - 17) / 10 * 9, height * 0.1);
+      text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, (windowWidth - 17) / 10 * 9, height * 0.08);
     } else {
-      text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, (windowWidth - 17) / 10 * 9, height * 0.1);
+      text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, (windowWidth - 17) / 10 * 9, height * 0.08);
     }
     if (i > 0 && violinPitches[i - 1].sharp == true) { //closest note to the left
-      text(violinPitches[i - 1].noteName + "#" + violinPitches[i - 1].octave, (windowWidth - 17) / 10, height * 0.1);
+      text(violinPitches[i - 1].noteName + "#" + violinPitches[i - 1].octave, (windowWidth - 17) / 10, height * 0.08);
     } else if (i > 0) {
-      text(violinPitches[i - 1].noteName + violinPitches[i - 1].octave, (windowWidth - 17) / 10, height * 0.1);
+      text(violinPitches[i - 1].noteName + violinPitches[i - 1].octave, (windowWidth - 17) / 10, height * 0.08);
     }
     let difference = Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2));
     textSize(17);
     if (freq - violinPitches[i].frequency > 0) { //right side of speedometer
       if (difference > 30) {
-        image(imgArrow, (windowWidth - 50) / 10 * 9.5, height * 0.125, width / 10, height / 10);
+        image(imgArrow, (windowWidth - 50) / 10 * 9.5, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       } else if (difference > 15) {
-        image(imgArrow, (windowWidth - 50) / 10 * 7.25, height * 0.125, width / 10, height / 10);
+        image(imgArrow, (windowWidth - 50) / 10 * 7.25, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       } else {
-        image(imgArrow, (windowWidth - 50) / 2, height * 0.125, width / 10, height / 10);
+        image(imgArrow, (windowWidth - 50) / 2, windowHeight /10, windowWidth / 15, windowHeight / 15);
       }
     } else { //left side of speedometer
       if (difference > 30) {
-        image(imgArrow, (windowWidth - 50) / 17, height * 0.125, width / 10, height / 10);
+        image(imgArrow, (windowWidth - 50) / 17, windowHeight /10, windowWidth / 15, windowHeight / 15);
       } else if (difference > 15) {
-        image(imgArrow, (windowWidth - 50) / 10 * 2.75, height * 0.125, width / 10, height / 10);
+        image(imgArrow, (windowWidth - 50) / 10 * 2.75, windowHeight /10, windowWidth / 15, windowHeight / 15);
       } else {
-        image(imgArrow, (windowWidth - 50) / 2, height * 0.125, width / 10, height / 10);
+        image(imgArrow, (windowWidth - 50) / 2, windowHeight /10, windowWidth / 15, windowHeight / 15);
       }
     }
     textSize(15);
-    text(freq.toFixed(0) + " Hz", width / 2, height * 0.05);
+    text(freq.toFixed(0) + " Hz", width / 2, height * 0.025);
     textSize(15);
     text("© 2019 Enoch Hsiao", width / 2, height * 0.95);
 
