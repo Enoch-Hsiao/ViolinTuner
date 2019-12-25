@@ -735,11 +735,11 @@ function draw() { //where everything happens
         }
       }
     }
-  } else {
+  } else { //smaller screens
     let middle = windowHeight / 2;
-    let scaling = windowHeight / 13;
-    let halfScaling = windowHeight / 26;
-    image(imgClef, -40, middle - scaling * 3, windowWidth / 1.75, windowHeight / 1.55);
+    let scaling = windowHeight / 14;
+    let halfScaling = windowHeight / 28;
+    image(imgClef, -40, middle - scaling * 3, windowWidth / 1.7, windowHeight / 1.7);
     if (Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)) < 15) { //cents calculation
       fill(51, 255, 51); //within 10 cents
     } else {
@@ -754,6 +754,7 @@ function draw() { //where everything happens
     rect(0, middle + scaling, windowWidth, 4);
     rect(0, middle + scaling * 2, windowWidth, 4);
     rect(0, middle + scaling * 3, windowWidth, 4);
+    //horizontal guage
     strokeWeight(7);
     line(5, 5, 5, windowHeight / 10); //tick marks
     line((windowWidth - 17) / 5, 5, (windowWidth - 17) / 5, windowHeight / 10);
@@ -793,21 +794,21 @@ function draw() { //where everything happens
       } else if (difference > 15) {
         image(imgArrow, (windowWidth - 50) / 10 * 7.25, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       } else {
-        image(imgArrow, (windowWidth - 50) / 2, windowHeight /10, windowWidth / 15, windowHeight / 15);
+        image(imgArrow, (windowWidth - 50) / 2, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       }
     } else { //left side of speedometer
       if (difference > 30) {
-        image(imgArrow, (windowWidth - 50) / 17, windowHeight /10, windowWidth / 15, windowHeight / 15);
+        image(imgArrow, (windowWidth - 50) / 17, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       } else if (difference > 15) {
-        image(imgArrow, (windowWidth - 50) / 10 * 2.75, windowHeight /10, windowWidth / 15, windowHeight / 15);
+        image(imgArrow, (windowWidth - 50) / 10 * 2.75, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       } else {
-        image(imgArrow, (windowWidth - 50) / 2, windowHeight /10, windowWidth / 15, windowHeight / 15);
+        image(imgArrow, (windowWidth - 50) / 2, windowHeight / 10, windowWidth / 15, windowHeight / 15);
       }
     }
     textSize(15);
     text(freq.toFixed(0) + " Hz", width / 2, height * 0.025);
     textSize(15);
-    text("© 2019 Enoch Hsiao", width / 2, height * 0.95);
+    text("© 2019 Enoch Hsiao", width / 2, height * 0.98);
 
     if (activityStarted == 1) { //started test
       let e = document.getElementById("scales");
@@ -929,7 +930,7 @@ function draw() { //where everything happens
             rect(windowWidth * (2 / 3), middle, 4, scaling); //vertical line
           }
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), 40, 70);
+            image(imgSharp, windowWidth * (2 / 3) - windowWidth * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling*2);
           }
           ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), windowWidth / 6, scaling);
         } else if (i > 6 && i < 26) { //middle notes
@@ -946,7 +947,7 @@ function draw() { //where everything happens
             rect(windowWidth * (2 / 3) - windowWidth / 6.4, (middle + scaling * 5.5) - (Math.floor(count / 2) * halfScaling), 4, scaling * 3.5);
           }
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), 40, 70);
+                   image(imgSharp, windowWidth * (2 / 3) - windowWidth * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling*2);
           }
           ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), windowWidth / 6, scaling);
         } else if (i > 25 && i < 34) { //Upper note ledger lines
@@ -968,7 +969,7 @@ function draw() { //where everything happens
           }
           rect(windowWidth * (2 / 3) - windowWidth / 6.4, (middle + scaling * 5.5) - (Math.floor(count / 2) * halfScaling), 4, scaling * 3.5);
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), 40, 70);
+                  image(imgSharp, windowWidth * (2 / 3) - windowWidth * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling*2);
           }
           ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), windowWidth / 6, scaling);
         } else if (i > 33 && i < 46) {
@@ -982,7 +983,7 @@ function draw() { //where everything happens
           }
           rect(windowWidth * (2 / 3) - windowWidth / 6.4, (middle + scaling * 5.5) - (Math.floor(count / 2) * halfScaling), 4, scaling * 3.5);
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+                    image(imgSharp, windowWidth * (2 / 3) - windowWidth * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling*2);
           }
           ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), windowWidth / 6, scaling);
           if (i > 37) {
