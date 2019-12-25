@@ -390,7 +390,9 @@ function change() {
     count = 0;
     countInTest = 0;
     halfStep = 0;
+    scale = undefined;
     flatScale = false;
+    goingUp = true;
     if (document.getElementById("playback").checked || document.getElementById("download").checked) {
       recorder.record(soundFile); //start recording
     }
@@ -401,6 +403,8 @@ function change() {
     count = 0;
     countInTest = 0;
     halfStep = 0;
+    scale = undefined;
+    goingUp = true;
     flatScale = false;
     if (document.getElementById("playback").checked) {
       recorder.stop();
@@ -482,7 +486,7 @@ function draw() { //where everything happens
     fill(255, 153, 153); //not within 10 cents;
   }
   strokeWeight(0);
-  rect(0, 0, width, height / 10);
+  rect(0, 0, width, height / 10.25);
   fill(0);
   strokeWeight(4);
   rect(0, middle - scaling, width, 4);
@@ -492,12 +496,21 @@ function draw() { //where everything happens
   rect(0, middle + scaling * 3, width, 4);
   strokeWeight(7);
   //guage
-  line(5, 5, 5, height / 11); //tick marks
-  line((width - 5) / 5, 5, (width - 5) / 5, height / 11);
-  line((width - 5) / 2.5, 5, (width - 5) / 2.5, height / 11);
-  line((width - 5) / (5 / 3), 5, (width - 5) / (5 / 3), height / 11);
-  line((width - 5) / (5 / 4), 5, (width - 5) / (5 / 4), height / 11);
-  line((width - 5), 5, (width - 5), height / 11);
+  if (windowWidth < 435) {
+    line(4, 4, 5, height / 11); //tick marks
+    line((width - 10) / 5, 5, (width - 10) / 5, height / 11);
+    line((width - 10) / 2.5, 5, (width - 10) / 2.5, height / 11);
+    line((width - 10) / (5 / 3), 5, (width - 10) / (5 / 3), height / 11);
+    line((width - 15) / (5 / 4), 5, (width - 15) / (5 / 4), height / 11);
+    line((width - 21), 5, (width - 21), height / 11);
+  } else {
+    line(4, 5, 4, height / 11); //tick marks
+    line((width - 5) / 5, 5, (width - 5) / 5, height / 11);
+    line((width - 5) / 2.5, 5, (width - 5) / 2.5, height / 11);
+    line((width - 5) / (5 / 3), 5, (width - 5) / (5 / 3), height / 11);
+    line((width - 5) / (5 / 4), 5, (width - 5) / (5 / 4), height / 11);
+    line((width - 4), 5, (width - 4), height / 11);
+  }
   fill(0);
   textSize(20);
   text("-30", (width - 9) / 5, height / 8.5);
@@ -506,18 +519,22 @@ function draw() { //where everything happens
   text("+30", (width - 9) / (5 / 4), height / 8.5);
   strokeWeight(4);
   fill(0);
-  textSize(25);
-  if (violinPitches[i].sharp == true) { //closest note
+  textSize(20);
+  if (violinPitches[i].sharp) { //closest note
     text(violinPitches[i].noteName + "#" + violinPitches[i].octave, (width - 5) / 2, height * 0.08);
   } else {
     text(violinPitches[i].noteName + violinPitches[i].octave, (width - 5) / 2, height * 0.08);
   }
-  if (violinPitches[i + 1].sharp == true) { //closest note to the right
+  if (violinPitches[i + 1].sharp && windowWidth > 435) { //closest note to the right
     text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, (width - 5) / 10 * 9, height * 0.08);
-  } else {
+  } else if (!violinPitches[i + 1].sharp && windowWidth > 435) {
     text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, (width - 5) / 10 * 9, height * 0.08);
+  } else if (!violinPitches[i + 1].sharp && windowWidth > 435) {
+    text(violinPitches[i + 1].noteName + "#" + violinPitches[i + 1].octave, (width - 15) / 10 * 9, height * 0.08);
+  } else {
+    text(violinPitches[i + 1].noteName + violinPitches[i + 1].octave, (width - 15) / 10 * 9, height * 0.08);
   }
-  if (i > 0 && violinPitches[i - 1].sharp == true) { //closest note to the left
+  if (i > 0 && violinPitches[i - 1].sharp) { //closest note to the left
     text(violinPitches[i - 1].noteName + "#" + violinPitches[i - 1].octave, (width - 5) / 10, height * 0.08);
   } else if (i > 0) {
     text(violinPitches[i - 1].noteName + violinPitches[i - 1].octave, (width - 5) / 10, height * 0.08);
@@ -543,26 +560,29 @@ function draw() { //where everything happens
   }
   textSize(15);
   text(freq.toFixed(0) + " Hz", (width - 5) / 2, height * 0.025);
+  text("© 2020 Enoch Hsiao", width/2, height * 0.98);
   textSize(15);
+  let e = document.getElementById("scales");
+  let newScale = Number(e.options[e.selectedIndex].value);
+  if (activityStarted == 1 && ((scale != undefined && scale != newScale) || newScale == -1)) {
+    stop();
+    change();
+  }
   if (activityStarted == 1) { //started test
-    let e = document.getElementById("scales");
-    scale = Number(e.options[e.selectedIndex].value);
-    if (scale == 11 || scale == 6 || scale == 1 || scale == 8 || scale == 3 || scale == 10) {
+    scale = newScale;
+    if (scale == 12 || scale == 6 || scale == 1 || scale == 8 || scale == 3 || scale == 10) {
       flatScale = true;
     }
     i = scale + countInTest;
-    console.log(countInTest);
+    if (scale == 12) {
+      i--;
+    }
     count = i;
     let difference = Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2));
     if (difference < 15) {
       if (halfStep === 14 && !goingUp) {
         stop();
         change();
-        goingUp = true;
-        count = 0;
-        success = 0;
-        halfStep = 0;
-        countInTest = 0;
       }
       if (halfStep === 14) {
         goingUp = false;
@@ -591,12 +611,15 @@ function draw() { //where everything happens
   if (!(activityStarted == 0 && difference > 40)) {
     if (i < 7) { //lower ledger lines G3 to C#3
       if (flatScale) {
-        if (violinPitches[i].sharp == true) {
+        if (violinPitches[i].sharp) {
           count++;
         }
-        if (violinPitches[i].noteName == "B" && scale == 11) {
+        if (violinPitches[i].noteName == "B" && scale == 12) {
           count += 2;
         }
+      }
+      if (violinPitches[i].noteName == "F" && scale == 11) {
+        count--;
       }
       if (i > 4 && i < 9) {
         count++;
@@ -612,20 +635,23 @@ function draw() { //where everything happens
         rect(width * (2 / 3), middle, 4, scaling); //vertical line
       }
       ellipse(width * (2 / 3) - width / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), width / 6, scaling);
-      if (violinPitches[i].sharp == true && !flatScale) {
+      if ((violinPitches[i].sharp || (violinPitches[i].noteName == "F" && scale == 11)) && !flatScale) {
         image(imgSharp, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
-      } else if ((violinPitches[i].sharp == true || (violinPitches[i].noteName == "B" && scale == 11)) && flatScale) {
+      } else if ((violinPitches[i].sharp || (violinPitches[i].noteName == "B" && scale == 12)) && flatScale) {
         image(imgFlat, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.4 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
       }
     } else if (i > 6 && i < 26) { //middle notes
       count += Math.floor(i / 12) * 2;
       if (flatScale) {
-        if (violinPitches[i].sharp == true) {
+        if (violinPitches[i].sharp) {
           count++;
         }
-        if (violinPitches[i].noteName == "B" && scale == 11) {
+        if (violinPitches[i].noteName == "B" && scale == 12) {
           count += 2;
         }
+      }
+      if (violinPitches[i].noteName == "F" && scale == 11) {
+        count--;
       }
       if (i % 12 > 4) {
         count++;
@@ -642,20 +668,23 @@ function draw() { //where everything happens
       if (count > 29) {
         rect(width * (2 / 3) - width * (1 / 5), middle - scaling * 2, 105, 4);
       }
-      if (violinPitches[i].sharp == true && !flatScale) {
+      if ((violinPitches[i].sharp || (violinPitches[i].noteName == "F" && scale == 11)) && !flatScale) {
         image(imgSharp, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
-      } else if ((violinPitches[i].sharp == true || (violinPitches[i].noteName == "B" && scale == 11)) && flatScale) {
+      } else if ((violinPitches[i].sharp || (violinPitches[i].noteName == "B" && scale == 12)) && flatScale) {
         image(imgFlat, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.4 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
       }
     } else if (i > 25 && i < 34) { //Upper note ledger lines
       count += Math.floor(i / 12) * 2;
       if (flatScale) {
-        if (violinPitches[i].sharp == true) {
+        if (violinPitches[i].sharp) {
           count++;
         }
-        if (violinPitches[i].noteName == "B" && scale == 11) {
+        if (violinPitches[i].noteName == "B" && scale == 12) {
           count += 2;
         }
+      }
+      if (violinPitches[i].noteName == "F" && scale == 11) {
+        count--;
       }
       if (i % 12 > 4) {
         count++;
@@ -674,19 +703,22 @@ function draw() { //where everything happens
       }
       rect(width * (2 / 3) - width / 6.4, (middle + scaling * 5.5) - (Math.floor(count / 2) * halfScaling), 4, scaling * 3.5);
       ellipse(width * (2 / 3) - width / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), width / 6, scaling);
-      if (violinPitches[i].sharp == true && !flatScale) {
+      if ((violinPitches[i].sharp || (violinPitches[i].noteName == "F" && scale == 11)) && !flatScale) {
         image(imgSharp, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
-      } else if ((violinPitches[i].sharp == true || (violinPitches[i].noteName == "B" && scale == 11)) && flatScale) {
+      } else if ((violinPitches[i].sharp || (violinPitches[i].noteName == "B" && scale == 12)) && flatScale) {
         image(imgFlat, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.4 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
       }
     } else if (i > 33 && i < 46) {
       count -= 12;
       count += Math.floor((i - 12) / 12) * 2;
+      if (violinPitches[i].noteName == "F" && scale == 11) {
+        count--;
+      }
       if (flatScale) {
-        if (violinPitches[i].sharp == true) {
+        if (violinPitches[i].sharp) {
           count++;
         }
-        if (violinPitches[i].noteName == "B" && scale == 11) {
+        if (violinPitches[i].noteName == "B" && scale == 12) {
           count += 2;
         }
       }
@@ -702,9 +734,9 @@ function draw() { //where everything happens
         rect(width * (2 / 3) - width * (1 / 5), middle - scaling * 2, 105, 4); //first upper ledger line 
       }
       ellipse(width * (2 / 3) - width / 13.4, middle + scaling * 5.5 - (Math.floor(count / 2) * halfScaling), width / 6, scaling);
-      if (violinPitches[i].sharp == true && !flatScale) {
+      if ((violinPitches[i].sharp || (violinPitches[i].noteName == "F" && scale == 11)) && !flatScale) {
         image(imgSharp, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.6 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
-      } else if ((violinPitches[i].sharp == true || (violinPitches[i].noteName == "B" && scale == 11)) && flatScale) {
+      } else if ((violinPitches[i].sharp || (violinPitches[i].noteName == "B" && scale == 12)) && flatScale) {
         image(imgFlat, width * (2 / 3) - width * (2 / 7), middle + scaling * 4.4 - (Math.floor(count / 2) * halfScaling), scaling, scaling * 1.75);
       }
     }
