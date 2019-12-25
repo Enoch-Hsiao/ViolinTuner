@@ -737,6 +737,14 @@ function draw() { //where everything happens
     }
   } else {
     image(imgClef, -40, windowHeight / 2 - windowHeight / 13 * 3, windowWidth / 1.75, windowHeight / 1.55);
+    if (Math.abs(1200 * Math.log(violinPitches[i].frequency / freq) / Math.log(2)) < 15) { //cents calculation
+      fill(51, 255, 51); //within 10 cents
+    } else {
+      fill(255, 153, 153); //not within 10 cents;
+    }
+    strokeWeight(0);
+    rect(0,0, windowWidth, (windowWidth)/5);
+    
     fill(0);
     rect(0, windowHeight / 2 - windowHeight / 13, windowWidth, 4);
     rect(0, windowHeight / 2, windowWidth, 4);
@@ -756,6 +764,7 @@ function draw() { //where everything happens
     text("-15", (windowWidth - 18.5) / 2.5, height * 0.175);
     text("+15", (windowWidth - 17.5) / (5 / 3), height * 0.175);
     text("+30", (windowWidth - 17) / (5 / 4), height * 0.175);
+
     strokeWeight(4);
     fill(0);
     textSize(25);
