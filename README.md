@@ -1,5 +1,5 @@
 # ViolinTuner
-Violin Scales Tuner Web Application 
+Violin Scales Tuner Web Application  
 https://musicmaster-code.github.io/ViolinTuner/
 
 ## Functionality
@@ -9,6 +9,7 @@ https://musicmaster-code.github.io/ViolinTuner/
 * Displays deviations between -40 and 40 cents.
 * Translates frequency played to music staff notation
 * Test/Activity that tests accuracy of various one octave scales with optional playblack and downloadable recording
+* Works on all devices except IOS (p5.js audioIn() does not work for IOS devices yet)
 
 ## Libraries
 
