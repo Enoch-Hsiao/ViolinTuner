@@ -549,8 +549,8 @@ function draw() { //where everything happens
     textSize(40);
     text(freq.toFixed(0) + " Hz", width / 2, height * 0.85); //frequency value
     textSize(15);
-    text("© 2019 Enoch Hsiao", width/2, height * 0.95);
-    
+    text("© 2019 Enoch Hsiao", width / 2, height * 0.95);
+
     if (activityStarted == 1) { //started test
       let e = document.getElementById("scales");
       let value = Number(e.options[e.selectedIndex].value);
@@ -736,13 +736,13 @@ function draw() { //where everything happens
       }
     }
   } else {
-    //image(imgClef, -40, 160, imgClef.width / 2, imgClef.height / 2.4);
+    image(imgClef, -40, windowHeight / 2 - windowHeight / 13 * 3, windowWidth / 1.75, windowHeight / 1.55);
     fill(0);
-    rect(0, windowHeight/2 - windowHeight/13, windowWidth, 4);
-    rect(0, windowHeight/2, windowWidth, 4);
-    rect(0, windowHeight/2 + windowHeight/13, windowWidth, 4);
-    rect(0, windowHeight/2 + windowHeight/13 * 2, windowWidth, 4);
-    rect(0, windowHeight/2 + windowHeight/13 * 3, windowWidth, 4);
+    rect(0, windowHeight / 2 - windowHeight / 13, windowWidth, 4);
+    rect(0, windowHeight / 2, windowWidth, 4);
+    rect(0, windowHeight / 2 + windowHeight / 13, windowWidth, 4);
+    rect(0, windowHeight / 2 + windowHeight / 13 * 2, windowWidth, 4);
+    rect(0, windowHeight / 2 + windowHeight / 13 * 3, windowWidth, 4);
     strokeWeight(7);
     line(5, 5, 5, windowHeight / 8); //tick marks
     line((windowWidth - 17) / 5, 5, (windowWidth - 17) / 5, windowHeight / 8);
@@ -796,7 +796,7 @@ function draw() { //where everything happens
     textSize(15);
     text(freq.toFixed(0) + " Hz", width / 2, height * 0.05);
     textSize(15);
-    text("© 2019 Enoch Hsiao", width/2, height * 0.95); 
+    text("© 2019 Enoch Hsiao", width / 2, height * 0.95);
 
     if (activityStarted == 1) { //started test
       let e = document.getElementById("scales");
@@ -909,18 +909,18 @@ function draw() { //where everything happens
           if (i > 4 && i < 9) {
             count++;
           }
-          rect(windowWidth * (2 / 3), windowHeight/2 + windowHeight/13, 4, windowHeight/13 * 4.4 - (Math.floor(count / 2) * windowHeight/26)); //vertical line
+          rect(windowWidth * (2 / 3), windowHeight / 2 + windowHeight / 13, 4, windowHeight / 13 * 4.4 - (Math.floor(count / 2) * windowHeight / 26)); //vertical line
           if (i < 4) { //second ledger line
-            rect(windowWidth * (2 / 3) - 70, windowHeight/2 + windowHeight/13 * 5, 105, 4);
+            rect(windowWidth * (2 / 3) - windowWidth * (1 / 5), windowHeight / 2 + windowHeight / 13 * 5, windowWidth * (1 / 4), 4);
           }
-          rect(windowWidth * (2 / 3) - 70, windowHeight/2 + windowHeight/13 * 4, 105, 4); //first ledger line
+          rect(windowWidth * (2 / 3) - windowWidth * (1 / 5), windowHeight / 2 + windowHeight / 13 * 4, windowWidth * (1 / 4), 4); //first ledger line
           if (i > 4) {
-            rect(windowWidth * (2 / 3), windowHeight/2 , 4, windowHeight/13); //vertical line
+            rect(windowWidth * (2 / 3), windowHeight / 2, 4, windowHeight / 13); //vertical line
           }
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, windowHeight/2 + windowHeight/13 * 4.6 - (Math.floor(count / 2) * windowHeight/26), 40, 70);
+            image(imgSharp, windowWidth * (2 / 3) - 100, windowHeight / 2 + windowHeight / 13 * 4.6 - (Math.floor(count / 2) * windowHeight / 26), 40, 70);
           }
-          ellipse(windowWidth * (2 / 3) - 20.5, windowHeight/2 + windowHeight/13 * 5.5 - (Math.floor(count / 2) * windowHeight/26), 50, 35);
+          ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, windowHeight / 2 + windowHeight / 13 * 5.5 - (Math.floor(count / 2) * windowHeight / 26), windowWidth / 6, windowHeight / 13);
         } else if (i > 6 && i < 26) { //middle notes
           count += Math.floor(i / 12) * 2;
           if (i % 12 > 4) {
@@ -929,15 +929,15 @@ function draw() { //where everything happens
           if (i % 12 > 9) {
             count++;
           }
-          if (i < 17) {
-            rect(windowWidth * (2 / 3), 335 - (Math.floor(count / 2) * 17.5), 4, 120);
-          } else {
-            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 120);
+          if (i < 17) { //right side vertical line
+            rect(windowWidth * (2 / 3), (windowHeight / 2 + windowHeight / 13 * 2) - (Math.floor(count / 2) * windowHeight / 26), 4, windowHeight / 13 * 3.5);
+          } else { //left side vertical line
+            rect(windowWidth * (2 / 3) - windowWidth / 6.4, (windowHeight / 2 + windowHeight / 13 * 5.5) - (Math.floor(count / 2) * windowHeight / 26), 4, windowHeight / 13 * 3.5);
           }
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+            image(imgSharp, windowWidth * (2 / 3) - 100, windowHeight / 2 + windowHeight / 13 * 4.6 - (Math.floor(count / 2) * windowHeight / 26), 40, 70);
           }
-          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+          ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, windowHeight / 2 + windowHeight / 13 * 5.5 - (Math.floor(count / 2) * windowHeight / 26), windowWidth / 6, windowHeight / 13);
         } else if (i > 25 && i < 34) { //Upper note ledger lines
           count += Math.floor(i / 12) * 2;
           if (i % 12 > 4) {
@@ -946,20 +946,20 @@ function draw() { //where everything happens
           if (i % 12 > 9) {
             count++;
           }
-          rect(windowWidth * (2 / 3) - 70, 200, 105, 4); //first upper ledger line
+          rect(windowWidth * (2 / 3) - windowWidth * (1 / 5), windowHeight / 2 - windowHeight / 13 * 2, 105, 4); //first upper ledger line
           if (i > 28) { //second upper ledger line
-            rect(windowWidth * (2 / 3) - 70, 165, 105, 4);
-            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 162.5)
+            rect(windowWidth * (2 / 3) - windowWidth * (1 / 5), windowHeight / 2 - windowHeight / 13 * 3, 105, 4);
+            rect(windowWidth * (2 / 3) - windowWidth / 6.4, windowHeight / 2, 4, windowHeight / 13);
           }
           if (i > 32) { //third upper ledger line
-            rect(windowWidth * (2 / 3) - 70, 130, 105, 4);
-            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 180); //High E
+            rect(windowWidth * (2 / 3) - windowWidth * (1 / 5), windowHeight / 2 - windowHeight / 13 * 4, 105, 4);
+            rect(windowWidth * (2 / 3) - windowWidth / 6.4, windowHeight / 2 - windowHeight / 13, 4, windowHeight / 13 * 2); //High E
           }
-          rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 145);
+          rect(windowWidth * (2 / 3) - windowWidth / 6.4, (windowHeight / 2 + windowHeight / 13 * 5.5) - (Math.floor(count / 2) * windowHeight / 26), 4, windowHeight / 13 * 3.5);
           if (violinPitches[i].sharp == true) {
-            image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
+            image(imgSharp, windowWidth * (2 / 3) - 100, windowHeight / 2 + windowHeight / 13 * 4.6 - (Math.floor(count / 2) * windowHeight / 26), 40, 70);
           }
-          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+          ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, windowHeight / 2 + windowHeight / 13 * 5.5 - (Math.floor(count / 2) * windowHeight / 26), windowWidth / 6, windowHeight / 13);
         } else if (i > 33 && i < 46) {
           count -= 12;
           count += Math.floor((i - 12) / 12) * 2;
@@ -969,17 +969,13 @@ function draw() { //where everything happens
           if ((i - 12) % 12 > 9) {
             count++;
           }
-          if (i < 17) {
-            rect(windowWidth * (2 / 3), 335 - (Math.floor(count / 2) * 17.5), 4, 120);
-          } else {
-            rect(windowWidth * (2 / 3) - 45.5, 462.5 - (Math.floor(count / 2) * 17.5), 4, 120);
-          }
+          rect(windowWidth * (2 / 3) - windowWidth / 6.4, (windowHeight / 2 + windowHeight / 13 * 5.5) - (Math.floor(count / 2) * windowHeight / 26), 4, windowHeight / 13 * 3.5);
           if (violinPitches[i].sharp == true) {
             image(imgSharp, windowWidth * (2 / 3) - 100, 430 - (Math.floor(count / 2) * 17.5), 40, 70);
           }
-          ellipse(windowWidth * (2 / 3) - 20.5, 462.5 - (Math.floor(count / 2) * 17.5), 50, 35);
+          ellipse(windowWidth * (2 / 3) - windowWidth / 13.4, windowHeight / 2 + windowHeight / 13 * 5.5 - (Math.floor(count / 2) * windowHeight / 26), windowWidth / 6, windowHeight / 13);
           if (i > 37) {
-            rect(windowWidth * (2 / 3) - 70, 200, 105, 4); //first upper ledger line 
+            rect(windowWidth * (2 / 3) - windowWidth * (1 / 5), windowHeight / 2 - windowHeight / 13 * 2, 105, 4); //first upper ledger line 
           }
           image(img8va, windowWidth * (2 / 3) - 100, 410 - (Math.floor(count / 2) * 17.5), 150, 50);
         }
