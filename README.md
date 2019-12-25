@@ -8,7 +8,7 @@ https://musicmaster-code.github.io/ViolinTuner/
 * Changes background color of gauge from red to green to indicate that the pitch is in tune (with a tolerance of 15 cents).
 * Displays deviations between -30 and 30 cents.
 * Translates frequency played to music treble staff notation
-* Test/Activity that tests accuracy of various two octave scales with optional playblack and downloadable recording
+* Test/Activity that tests accuracy of various two octave major scales with optional playblack and downloadable recording
 * Works on all devices except IOS (p5.js audioIn() does not work for IOS devices yet)
 
 ## Libraries Used
