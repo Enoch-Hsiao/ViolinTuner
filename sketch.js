@@ -473,7 +473,7 @@ function draw() { //where everything happens
     height = 600;
     resizeCanvas(width, height);
   }
-  background(255);
+  background(245, 245, 245);
   textAlign(CENTER, CENTER);
   let i = findClosest(freq);
   let middle = height / 2;
