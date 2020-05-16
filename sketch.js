@@ -392,6 +392,9 @@ function startStopChanger() {
 }
 
 function change() {
+  if(!checkIfScaleHasBeenSelected()) {
+    return;
+  }
   let elem = document.getElementById("startButton");
   scale = -1;
   count = 0;
@@ -418,6 +421,15 @@ function change() {
   }
 }
 
+function checkIfScaleHasBeenSelected() {
+    let e = document.getElementById("scales");
+    let newScale = Number(e.options[e.selectedIndex].value);
+    if(newScale == -1) {
+      alert("Please select a scale");
+      return false;
+    }
+    return true;
+}
 //find closest note using binary search
 function findClosest(target) {
   if (target == undefined || target <= violinPitches[0].frequency) {
